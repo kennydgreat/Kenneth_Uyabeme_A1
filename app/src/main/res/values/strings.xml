@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Kenneth_Uyabeme_A1</string><string name="enter_amount_HintString">Enter Amount</string>
+    <string name="include_hstChkBoxString">Include HST</string>
+    <string name="tipTextview_String">Tip%</string>
+    <string name="numOf_peopleTextViewString"># of people</string>
+    <string name="clearButtonString">Clear</string>
+</resources>
