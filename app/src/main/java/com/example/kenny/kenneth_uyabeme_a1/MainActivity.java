@@ -2,6 +2,8 @@ package com.example.kenny.kenneth_uyabeme_a1;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -48,6 +50,25 @@ public class MainActivity extends Activity {
 
         }
     }
+
+    // EditText Listener Class
+    private class AmountEditTextListener implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            calculateBill();
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,9 +80,10 @@ public class MainActivity extends Activity {
         numOfPeopleSpinner = findViewById(R.id.numOfPeopleSpinner);
         numOfPeopleTextView = findViewById(R.id.numOfPeopleTextView);
 
-        //Getting reference to editText
+        //Getting reference to editText and it's listener
         enterAmount_editText = findViewById(R.id.enterAmount_editText);
-
+        AmountEditTextListener amountEditTextListener = new AmountEditTextListener();
+        enterAmount_editText.addTextChangedListener(amountEditTextListener);
         //Getting reference to Button
         clear_Button = findViewById(R.id.clear_Button);
         //Create button listener and setting it to clear_button
@@ -85,6 +107,29 @@ public class MainActivity extends Activity {
         //Assigning adapters to respective spinners
         tip_Spinner.setAdapter(tipSpinnerAdapter);
         numOfPeopleSpinner.setAdapter(numofPplSpinnerAdapter);
+
+
+    }
+
+    /**
+     * This Method
+     * 1) Gets the amount, tip, Number of people
+     * 2) Displays the tip, total and the per person amount
+     */
+    public void calculateBill() {
+        double amount, tipAoumnt, tipPercent, total;
+        Double numOfPeople;
+        String tipDisplayString = getString(R.string.tipDisplayString);
+        //Getting the amount, tipPercent, tipAmount and numOfPeople
+        amount = Double.valueOf(enterAmount_editText.getText().toString());
+        tipPercent = Double.valueOf(tip_Spinner.getSelectedItem().toString()) / 100;
+        tipAoumnt = amount * tipPercent;
+        numOfPeople = Double.valueOf(numOfPeopleSpinner.getSelectedItem().toString());
+        //Condition for if there is more than 1 person
+        if (numOfPeople > 1) {
+            tip_TextView.setText(String.format(tipDisplayString, tipAoumnt));
+
+        }
 
 
     }

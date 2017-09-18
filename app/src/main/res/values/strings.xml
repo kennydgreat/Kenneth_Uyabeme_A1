@@ -4,6 +4,7 @@
     <string name="tipTextview_String">Tip%</string>
     <string name="numOf_peopleTextViewString"># of people</string>
     <string name="clearButtonString">Clear</string>
+    <string name="tipDisplayString">Tip is: %2f</string>
     <string-array name="TipSpinnerData">
         <item>10</item>
         <item>15</item>
