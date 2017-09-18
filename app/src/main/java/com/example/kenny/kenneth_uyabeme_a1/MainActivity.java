@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -27,13 +28,24 @@ public class MainActivity extends Activity {
     //Button
     Button clear_Button;
 
+    //CheckBox
+    CheckBox hst_checkBox;
+
 
     //Button listener Class
     private class ClearButtonListener implements View.OnClickListener {
 
         @Override
         public void onClick(View view) {
+            //Clearing enterAmountEditText
             enterAmount_editText.setText("");
+            //Set spinners to the first option .i.e "10" for tip_Spinner and "1" for numOfPeopleSpinner
+            tip_Spinner.setSelection(0);
+            numOfPeopleSpinner.setSelection(0);
+
+            //Unchecking hst_checkBox
+            hst_checkBox.setChecked(false);
+
         }
     }
     @Override
@@ -52,8 +64,12 @@ public class MainActivity extends Activity {
 
         //Getting reference to Button
         clear_Button = findViewById(R.id.clear_Button);
+        //Create button listener and setting it to clear_button
         ClearButtonListener buttonListener = new ClearButtonListener();
         clear_Button.setOnClickListener(buttonListener);
+
+        //Getting reference to checkBox
+        hst_checkBox = findViewById(R.id.hst_checkBox);
 
         //String array containing spinner integer data
         String[] tipSpinnerData = getResources().getStringArray(R.array.TipSpinnerData);
