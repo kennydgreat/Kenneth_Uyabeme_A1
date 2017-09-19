@@ -23,6 +23,7 @@ public class MainActivity extends Activity {
     Spinner numOfPeopleSpinner;
     TextView numOfPeopleTextView;
     TextView totalAmountDisplay;
+    TextView amountPerPersonDisplay;
     //-----------------
 
     //EditText
@@ -82,6 +83,7 @@ public class MainActivity extends Activity {
         numOfPeopleSpinner = findViewById(R.id.numOfPeopleSpinner);
         numOfPeopleTextView = findViewById(R.id.numOfPeopleTextView);
         totalAmountDisplay = findViewById(R.id.totalTextDisplay);
+        amountPerPersonDisplay = findViewById(R.id.amountPerPerson);
 
         //Getting reference to editText and it's listener
         enterAmount_editText = findViewById(R.id.enterAmount_editText);
@@ -120,9 +122,12 @@ public class MainActivity extends Activity {
      * 2) Displays the tip, total and the per person amount
      */
     public void calculateBill() {
-        double amount, tipAoumnt, tipPercent, total, numOfPeople, hst;
+        //Local variables
+        double amount, tipAoumnt, tipPercent, total, numOfPeople, hst, amountPerPerson;
         String tipDisplayString = getString(R.string.tipDisplayString);
         String totalAmountString = getString(R.string.totalAmountString);
+        String amountPerPersonString = getString(R.string.amountPerPersonString);
+
         hst = 1.13; // This is to make calculation for total+hst quicker
 
         /* The following if and else block is to solve a bug which causes the
@@ -133,26 +138,30 @@ public class MainActivity extends Activity {
             amount = 0;
         } else amount = Double.valueOf(enterAmount_editText.getText().toString());
         total = amount * hst;
+        //-------------------------------------
 
-        //Getting the tipPercent, tipAmount and numOfPeople
+        //Getting the tipPercent, tipAmount and numOfPeople and setting amountPerPerson
         tipPercent = Double.valueOf(tip_Spinner.getSelectedItem().toString()) / 100;
         numOfPeople = Double.valueOf(numOfPeopleSpinner.getSelectedItem().toString());
 
         //The following if and else handles cases when the HST checkbox is check or unchecked
-        if (hst_checkBox.isChecked()) tipAoumnt = total * tipPercent;
-        else tipAoumnt = amount * tipPercent;
-
+        if (hst_checkBox.isChecked()) {
+            tipAoumnt = total * tipPercent;
+            total = total + tipAoumnt;
+        } else {
+            tipAoumnt = amount * tipPercent;
+            total = total + tipAoumnt;
+        }
+        //Setting the amount per Person
+        amountPerPerson = total / numOfPeople;
         //Updating the tip_Dispaly and totalAmount display
         tip_TextView.setText(String.format(tipDisplayString, tipAoumnt));
         totalAmountDisplay.setText(String.format(totalAmountString, total));
 
         //Condition for if there is more than 1 person
         if (numOfPeople > 1) {
-
-
-        } else {
-        }
-
+            amountPerPersonDisplay.setText(String.format(amountPerPersonString, amountPerPerson));
+        } else amountPerPersonDisplay.setText("");
 
     }
 }

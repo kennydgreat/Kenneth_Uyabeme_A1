@@ -6,6 +6,7 @@
     <string name="clearButtonString">Clear</string>
     <string name="tipDisplayString">Tip is: $%.2f</string>
     <string name="totalAmountString">Your total is: $%.2f</string>
+    <string name="amountPerPersonString">Per person: $%.2f</string>
     <string-array name="TipSpinnerData">
         <item>10</item>
         <item>15</item>
