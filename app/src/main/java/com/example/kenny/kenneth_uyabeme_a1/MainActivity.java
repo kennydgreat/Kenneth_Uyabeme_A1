@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -22,6 +24,8 @@ public class MainActivity extends Activity {
     TextView tip_TextView;
     Spinner numOfPeopleSpinner;
     TextView numOfPeopleTextView;
+
+    //Display TextViews
     TextView totalAmountDisplay;
     TextView amountPerPersonDisplay;
     //-----------------
@@ -36,13 +40,15 @@ public class MainActivity extends Activity {
     CheckBox hst_checkBox;
 
 
-    //Button listener Class
+    //Button named inner listener Class
     private class ClearButtonListener implements View.OnClickListener {
 
         @Override
         public void onClick(View view) {
-            //Clearing enterAmountEditText
+            //Clearing enterAmountEditText, and display text view
             enterAmount_editText.setText("");
+            totalAmountDisplay.setText("");
+            amountPerPersonDisplay.setText("");
             //Set spinners to the first option .i.e "10" for tip_Spinner and "1" for numOfPeopleSpinner
             tip_Spinner.setSelection(0);
             numOfPeopleSpinner.setSelection(0);
@@ -52,7 +58,7 @@ public class MainActivity extends Activity {
         }
     }
 
-    // EditText Listener Class
+    // EditText named inner Listener Class
     private class AmountEditTextListener implements TextWatcher {
 
         @Override
@@ -67,6 +73,15 @@ public class MainActivity extends Activity {
 
         @Override
         public void afterTextChanged(Editable editable) {
+            calculateBill();
+        }
+    }
+
+    //Named inner class of hst checkbox listener
+    private class HSTcheckBoxListener implements CompoundButton.OnClickListener {
+
+        @Override
+        public void onClick(View view) {
             calculateBill();
         }
     }
@@ -95,8 +110,10 @@ public class MainActivity extends Activity {
         ClearButtonListener buttonListener = new ClearButtonListener();
         clear_Button.setOnClickListener(buttonListener);
 
-        //Getting reference to checkBox
+        //Getting reference to checkBox and attaching listener
         hst_checkBox = findViewById(R.id.hst_checkBox);
+        HSTcheckBoxListener hsTcheckButtonListener = new HSTcheckBoxListener();
+        hst_checkBox.setOnClickListener(hsTcheckButtonListener);
 
         //String array containing spinner integer data
         String[] tipSpinnerData = getResources().getStringArray(R.array.TipSpinnerData);
@@ -109,10 +126,33 @@ public class MainActivity extends Activity {
         tipSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         numofPplSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        //Assigning adapters to respective spinners
+        //Assigning adapters to respective spinners and setting spinner OnItemSelectedlisteners
+        //----------------------------------------
         tip_Spinner.setAdapter(tipSpinnerAdapter);
         numOfPeopleSpinner.setAdapter(numofPplSpinnerAdapter);
+        tip_Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                calculateBill();
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        numOfPeopleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                calculateBill();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        //----------------------------------------------
 
     }
 
