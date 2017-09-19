@@ -154,7 +154,7 @@ public class MainActivity extends Activity {
         }
         //Setting the amount per Person
         amountPerPerson = total / numOfPeople;
-        //Updating the tip_Dispaly and totalAmount display
+        //Updating the tip_Display and totalAmount display
         tip_TextView.setText(String.format(tipDisplayString, tipAoumnt));
         totalAmountDisplay.setText(String.format(totalAmountString, total));
 
