@@ -22,6 +22,7 @@ public class MainActivity extends Activity {
     TextView tip_TextView;
     Spinner numOfPeopleSpinner;
     TextView numOfPeopleTextView;
+    TextView totalAmountDisplay;
     //-----------------
 
     //EditText
@@ -44,7 +45,6 @@ public class MainActivity extends Activity {
             //Set spinners to the first option .i.e "10" for tip_Spinner and "1" for numOfPeopleSpinner
             tip_Spinner.setSelection(0);
             numOfPeopleSpinner.setSelection(0);
-
             //Unchecking hst_checkBox
             hst_checkBox.setChecked(false);
 
@@ -69,6 +69,8 @@ public class MainActivity extends Activity {
             calculateBill();
         }
     }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +81,7 @@ public class MainActivity extends Activity {
         tip_TextView = findViewById(R.id.tip_TextView);
         numOfPeopleSpinner = findViewById(R.id.numOfPeopleSpinner);
         numOfPeopleTextView = findViewById(R.id.numOfPeopleTextView);
+        totalAmountDisplay = findViewById(R.id.totalTextDisplay);
 
         //Getting reference to editText and it's listener
         enterAmount_editText = findViewById(R.id.enterAmount_editText);
@@ -117,18 +120,37 @@ public class MainActivity extends Activity {
      * 2) Displays the tip, total and the per person amount
      */
     public void calculateBill() {
-        double amount, tipAoumnt, tipPercent, total;
-        Double numOfPeople;
+        double amount, tipAoumnt, tipPercent, total, numOfPeople, hst;
         String tipDisplayString = getString(R.string.tipDisplayString);
-        //Getting the amount, tipPercent, tipAmount and numOfPeople
-        amount = Double.valueOf(enterAmount_editText.getText().toString());
+        String totalAmountString = getString(R.string.totalAmountString);
+        hst = 1.13; // This is to make calculation for total+hst quicker
+
+        /* The following if and else block is to solve a bug which causes the
+        app to crash. The bug is reproduceable when the editText listener calls the calculateBill
+        and the method tries get the text in the EditText but there is no text.
+        */
+        if (enterAmount_editText.getText().toString().equals("")) {
+            amount = 0;
+        } else amount = Double.valueOf(enterAmount_editText.getText().toString());
+        total = amount * hst;
+
+        //Getting the tipPercent, tipAmount and numOfPeople
         tipPercent = Double.valueOf(tip_Spinner.getSelectedItem().toString()) / 100;
-        tipAoumnt = amount * tipPercent;
         numOfPeople = Double.valueOf(numOfPeopleSpinner.getSelectedItem().toString());
+
+        //The following if and else handles cases when the HST checkbox is check or unchecked
+        if (hst_checkBox.isChecked()) tipAoumnt = total * tipPercent;
+        else tipAoumnt = amount * tipPercent;
+
+        //Updating the tip_Dispaly and totalAmount display
+        tip_TextView.setText(String.format(tipDisplayString, tipAoumnt));
+        totalAmountDisplay.setText(String.format(totalAmountString, total));
+
         //Condition for if there is more than 1 person
         if (numOfPeople > 1) {
-            tip_TextView.setText(String.format(tipDisplayString, tipAoumnt));
 
+
+        } else {
         }
 
 
