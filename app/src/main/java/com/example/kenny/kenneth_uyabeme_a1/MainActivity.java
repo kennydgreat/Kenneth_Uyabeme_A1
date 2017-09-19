@@ -26,6 +26,7 @@ public class MainActivity extends Activity {
     TextView numOfPeopleTextView;
 
     //Display TextViews
+    TextView tip_TextViewDisplay;
     TextView totalAmountDisplay;
     TextView amountPerPersonDisplay;
     //-----------------
@@ -46,7 +47,8 @@ public class MainActivity extends Activity {
         @Override
         public void onClick(View view) {
             //Clearing enterAmountEditText, and display text view
-            enterAmount_editText.setText("");
+            //enterAmount_editText.setText("");
+            tip_TextViewDisplay.setText("");
             totalAmountDisplay.setText("");
             amountPerPersonDisplay.setText("");
             //Set spinners to the first option .i.e "10" for tip_Spinner and "1" for numOfPeopleSpinner
@@ -73,7 +75,12 @@ public class MainActivity extends Activity {
 
         @Override
         public void afterTextChanged(Editable editable) {
-            calculateBill();
+            //This is to make sure that when the clear button clears the amount editText
+            //when there's something in the amount editText the text change does not trigger
+            // a calculateBill method call.
+            if (enterAmount_editText.getText().toString().equals("")) {
+                clear_Button.performClick(); // clear the fields if the amount is empty
+            } else calculateBill();
         }
     }
 
@@ -82,7 +89,11 @@ public class MainActivity extends Activity {
 
         @Override
         public void onClick(View view) {
-            calculateBill();
+            //This is make sure clicking the checkBox with an empty amoumt editText
+            // calls the clear_buttons
+            if (enterAmount_editText.getText().toString().equals("")) {
+                clear_Button.performClick(); // clear the fields if the amount is empty
+            } else calculateBill();
         }
     }
 
@@ -99,6 +110,7 @@ public class MainActivity extends Activity {
         numOfPeopleTextView = findViewById(R.id.numOfPeopleTextView);
         totalAmountDisplay = findViewById(R.id.totalTextDisplay);
         amountPerPersonDisplay = findViewById(R.id.amountPerPerson);
+        tip_TextViewDisplay = findViewById(R.id.tipTextDisplay);
 
         //Getting reference to editText and it's listener
         enterAmount_editText = findViewById(R.id.enterAmount_editText);
@@ -107,7 +119,7 @@ public class MainActivity extends Activity {
         //Getting reference to Button
         clear_Button = findViewById(R.id.clear_Button);
         //Create button listener and setting it to clear_button
-        ClearButtonListener buttonListener = new ClearButtonListener();
+        final ClearButtonListener buttonListener = new ClearButtonListener();
         clear_Button.setOnClickListener(buttonListener);
 
         //Getting reference to checkBox and attaching listener
@@ -133,7 +145,10 @@ public class MainActivity extends Activity {
         tip_Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                calculateBill();
+                //This is to make sure that calculateBill doesn't get called when the app starts
+                if (enterAmount_editText.getText().toString().equals("")) {
+                    clear_Button.performClick(); // clear the fields if the amount is empty
+                } else calculateBill();
             }
 
             @Override
@@ -144,8 +159,14 @@ public class MainActivity extends Activity {
         numOfPeopleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                calculateBill();
+                //This is to make sure that when the clear button clears the amount editText
+                //when there's something in the amount editText the text change does not trigger
+                // a calculateBill method call.
+                if (enterAmount_editText.getText().toString().equals("")) {
+                    clear_Button.performClick(); // clear the fields if the amount is empty
+                } else calculateBill();
             }
+
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
@@ -153,7 +174,6 @@ public class MainActivity extends Activity {
             }
         });
         //----------------------------------------------
-
     }
 
     /**
@@ -195,7 +215,7 @@ public class MainActivity extends Activity {
         //Setting the amount per Person
         amountPerPerson = total / numOfPeople;
         //Updating the tip_Display and totalAmount display
-        tip_TextView.setText(String.format(tipDisplayString, tipAoumnt));
+        tip_TextViewDisplay.setText(String.format(tipDisplayString, tipAoumnt));
         totalAmountDisplay.setText(String.format(totalAmountString, total));
 
         //Condition for if there is more than 1 person
