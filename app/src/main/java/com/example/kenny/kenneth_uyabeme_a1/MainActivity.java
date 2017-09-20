@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.util.Locale;
 
 public class MainActivity extends Activity {
     //FIELDS
@@ -177,7 +176,6 @@ public class MainActivity extends Activity {
         //Local variables
         double amount, tipAoumnt, tipPercent, total, numOfPeople, hst, amountPerPerson;
         String tipDisplayString = getString(R.string.tipDisplayString);
-        String totalAmountString = getString(R.string.totalAmountString);
         String amountPerPersonString = getString(R.string.amountPerPersonString);
 
 
