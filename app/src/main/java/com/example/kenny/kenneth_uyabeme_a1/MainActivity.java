@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 public class MainActivity extends Activity {
     //FIELDS
 
@@ -47,7 +49,7 @@ public class MainActivity extends Activity {
         @Override
         public void onClick(View view) {
             //Clearing enterAmountEditText, and display text view
-            //enterAmount_editText.setText("");
+            enterAmount_editText.setText("");
             tip_TextViewDisplay.setText("");
             totalAmountDisplay.setText("");
             amountPerPersonDisplay.setText("");
@@ -78,9 +80,7 @@ public class MainActivity extends Activity {
             //This is to make sure that when the clear button clears the amount editText
             //when there's something in the amount editText the text change does not trigger
             // a calculateBill method call.
-            if (enterAmount_editText.getText().toString().equals("")) {
-                clear_Button.performClick(); // clear the fields if the amount is empty
-            } else calculateBill();
+            calculateBill();
         }
     }
 
@@ -91,9 +91,7 @@ public class MainActivity extends Activity {
         public void onClick(View view) {
             //This is make sure clicking the checkBox with an empty amoumt editText
             // calls the clear_buttons
-            if (enterAmount_editText.getText().toString().equals("")) {
-                clear_Button.performClick(); // clear the fields if the amount is empty
-            } else calculateBill();
+            calculateBill();
         }
     }
 
@@ -145,10 +143,7 @@ public class MainActivity extends Activity {
         tip_Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                //This is to make sure that calculateBill doesn't get called when the app starts
-                if (enterAmount_editText.getText().toString().equals("")) {
-                    clear_Button.performClick(); // clear the fields if the amount is empty
-                } else calculateBill();
+                calculateBill();
             }
 
             @Override
@@ -162,9 +157,7 @@ public class MainActivity extends Activity {
                 //This is to make sure that when the clear button clears the amount editText
                 //when there's something in the amount editText the text change does not trigger
                 // a calculateBill method call.
-                if (enterAmount_editText.getText().toString().equals("")) {
-                    clear_Button.performClick(); // clear the fields if the amount is empty
-                } else calculateBill();
+                calculateBill();
             }
 
 
@@ -188,16 +181,17 @@ public class MainActivity extends Activity {
         String totalAmountString = getString(R.string.totalAmountString);
         String amountPerPersonString = getString(R.string.amountPerPersonString);
 
-        hst = 1.13; // This is to make calculation for total+hst quicker
+
 
         /* The following if and else block is to solve a bug which causes the
         app to crash. The bug is reproduceable when the editText listener calls the calculateBill
         and the method tries get the text in the EditText but there is no text.
         */
         if (enterAmount_editText.getText().toString().equals("")) {
-            amount = 0;
+            return; // exit the method if there is nothing in the editText
         } else amount = Double.valueOf(enterAmount_editText.getText().toString());
-        total = amount * hst;
+        hst = amount * 0.13;
+        total = amount * 1.13;
         //-------------------------------------
 
         //Getting the tipPercent, tipAmount and numOfPeople and setting amountPerPerson
@@ -216,7 +210,8 @@ public class MainActivity extends Activity {
         amountPerPerson = total / numOfPeople;
         //Updating the tip_Display and totalAmount display
         tip_TextViewDisplay.setText(String.format(tipDisplayString, tipAoumnt));
-        totalAmountDisplay.setText(String.format(totalAmountString, total));
+        totalAmountDisplay.setText(String.format("Your total is: $%.2f ($%.2f HST)", total, hst));
+        //You said the above usage of String literals in code is OK.
 
         //Condition for if there is more than 1 person
         if (numOfPeople > 1) {
