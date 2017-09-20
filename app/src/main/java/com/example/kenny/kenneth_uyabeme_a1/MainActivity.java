@@ -48,7 +48,7 @@ public class MainActivity extends Activity {
 
         @Override
         public void onClick(View view) {
-            //Clearing enterAmountEditText, and display text view
+            //Clearing enterAmountEditText, and display TextViews
             enterAmount_editText.setText("");
             tip_TextViewDisplay.setText("");
             totalAmountDisplay.setText("");
@@ -67,19 +67,17 @@ public class MainActivity extends Activity {
 
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+            //This method isn't needed
         }
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+            //This method isn't needed
         }
 
         @Override
         public void afterTextChanged(Editable editable) {
-            //This is to make sure that when the clear button clears the amount editText
-            //when there's something in the amount editText the text change does not trigger
-            // a calculateBill method call.
+            //After a text is inputted or removed calculate the Bill
             calculateBill();
         }
     }
@@ -89,8 +87,7 @@ public class MainActivity extends Activity {
 
         @Override
         public void onClick(View view) {
-            //This is make sure clicking the checkBox with an empty amoumt editText
-            // calls the clear_buttons
+            //Calculate the bill whenever the checkbox is clicked
             calculateBill();
         }
     }
@@ -114,6 +111,7 @@ public class MainActivity extends Activity {
         enterAmount_editText = findViewById(R.id.enterAmount_editText);
         AmountEditTextListener amountEditTextListener = new AmountEditTextListener();
         enterAmount_editText.addTextChangedListener(amountEditTextListener);
+
         //Getting reference to Button
         clear_Button = findViewById(R.id.clear_Button);
         //Create button listener and setting it to clear_button
@@ -125,7 +123,7 @@ public class MainActivity extends Activity {
         HSTcheckBoxListener hsTcheckButtonListener = new HSTcheckBoxListener();
         hst_checkBox.setOnClickListener(hsTcheckButtonListener);
 
-        //String array containing spinner integer data
+        //String array containing spinner string data
         String[] tipSpinnerData = getResources().getStringArray(R.array.TipSpinnerData);
         String[] numofPeopleSpinnerData = getResources().getStringArray(R.array.NumberOfPeopleSpinnerData);
 
@@ -143,36 +141,37 @@ public class MainActivity extends Activity {
         tip_Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                //Calculate the bill whenever an item is selected
                 calculateBill();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
+                //This method is not needed
             }
         });
         numOfPeopleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                //This is to make sure that when the clear button clears the amount editText
-                //when there's something in the amount editText the text change does not trigger
-                // a calculateBill method call.
+                //Calculate the bill whenever an item is selected
                 calculateBill();
             }
 
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
+                //This method is not needed
             }
         });
-        //----------------------------------------------
+
     }
 
     /**
      * This Method
-     * 1) Gets the amount, tip, Number of people
-     * 2) Displays the tip, total and the per person amount
+     * 1)Is called by all listeners
+     * 2) Gets the amount, tip, Number of people
+     * 3) Calculates the bill and displays the tip, total and the per person amount
+     * 4)Is called by all listens
      */
     public void calculateBill() {
         //Local variables
@@ -183,24 +182,25 @@ public class MainActivity extends Activity {
 
 
 
-        /* The following if and else block is to solve a bug which causes the
-        app to crash. The bug is reproduceable when the editText listener calls the calculateBill
-        and the method tries get the text in the EditText but there is no text.
+        /* The following if and else block is make sure nothing happens whenever
+        the editText is empty and gets the amount inputted by the use it isn't
         */
         if (enterAmount_editText.getText().toString().equals("")) {
             return; // exit the method if there is nothing in the editText
         } else amount = Double.valueOf(enterAmount_editText.getText().toString());
-        hst = amount * 0.13;
-        total = amount * 1.13;
+
         //-------------------------------------
+        //Getting HST and setting the total
+        hst = amount * 0.13;
+        total = amount * 1.13; //1.13 used to make the HST + amount calculation quicker
 
         //Getting the tipPercent, tipAmount and numOfPeople and setting amountPerPerson
         tipPercent = Double.valueOf(tip_Spinner.getSelectedItem().toString()) / 100;
         numOfPeople = Double.valueOf(numOfPeopleSpinner.getSelectedItem().toString());
 
-        //The following if and else handles cases when the HST checkbox is check or unchecked
+        //The following if and else block handles cases when the HST checkbox is check or unchecked
         if (hst_checkBox.isChecked()) {
-            tipAoumnt = total * tipPercent;
+            tipAoumnt = total * tipPercent; //if checked make sure the tip is from the HST + amount
             total = total + tipAoumnt;
         } else {
             tipAoumnt = amount * tipPercent;
